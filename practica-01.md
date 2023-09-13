@@ -27,8 +27,8 @@ Elegimos cinco criterios de evaluación. Los destacados en negrita son los elegi
 
 2. Relevancia:
 
-   - ¿Se relacionan las preguntas directamente con los elementos morfológicos elegidos?
-   - ¿Es relevante para el campo de la geomorfología?
+   - ¿Se relacionan las preguntas directamente con los elementos propios de los hábitats y las comunidades ecológicas?
+   - ¿Es relevante para el campo de la biogeografía?
 
 3. Especificidad:
 
@@ -37,7 +37,7 @@ Elegimos cinco criterios de evaluación. Los destacados en negrita son los elegi
 
 4. Contexto teórico:
 
-   - ¿La pregunta demuestra un entendimiento claro del contexto teórico y científico en el que se encuentra la geomorfología?
+   - ¿La pregunta demuestra un entendimiento claro del contexto teórico y científico en el que se encuentra la biogeografía/ecología?
    - ¿Hace referencia a teorías o conceptos pertinentes?
 
 5. Viabilidad y factibilidad:
@@ -47,17 +47,17 @@ Elegimos cinco criterios de evaluación. Los destacados en negrita son los elegi
 
 6. Originalidad e innovación:
 
-   - ¿Las preguntas muestran un enfoque original o una perspectiva novedosa hacia los elementos morfológicos?
+   - ¿Las preguntas muestran un enfoque original o una perspectiva novedosa hacia las comunidades ecológicas y, en general, a la biogeografía?
    - ¿Proponen nuevas ideas o enfoques?
 
 7. Métodos de observación:
 
-   - ¿Las preguntas sugieren métodos de observación apropiados para analizar los elementos morfológicos en cuestión?
+   - ¿Las preguntas sugieren métodos de observación apropiados para analizar comunidades ecológicas y/o hábitats en cuestión?
    - ¿Consideran la disponibilidad de datos y herramientas?
 
 8. Potencial de contribución:
 
-   - ¿Las preguntas tienen el potencial de contribuir al conocimiento actual en geomorfología?
+   - ¿Las preguntas tienen el potencial de contribuir al conocimiento actual en biogeografía/ecología?
    - ¿Pueden generar información útil para la comunidad científica?
 
 9. Redacción y estructura:
@@ -67,7 +67,7 @@ Elegimos cinco criterios de evaluación. Los destacados en negrita son los elegi
 
 10. Creatividad y originalidad:
 
-    - ¿Las preguntas demuestran creatividad en la formulación y enfoque de los elementos morfológicos?
+    - ¿Las preguntas demuestran creatividad en la formulación y enfoque biogeográfico/ecológico?
     - ¿Presentan ideas novedosas o perspectivas únicas?
 
 11. Impacto potencial:
