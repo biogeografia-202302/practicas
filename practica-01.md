@@ -5,6 +5,7 @@
 1. Observa el mapa a continuación:
 
 ![](img/campus-uasd-sede-coberturas-h3-res-11.jpg)
+Figura 1. Polígono núcleo del campus de la Universidad Autónoma de Santo Domingo en su sede central. Superpuestos y mezclados con imagen satélital Maxar (tomada desde Google Satellite), se muestran cuatro tipos de coberturas y hexágonos H3 de resolución 11.
 
 2. Presta atención a los cuatro tipo de "coberturas". Si tienes dudas sobre alguno, hazme consulta. No hay mucho que documentarse sobre éstas coberturas, sólo que es importante que las puedas distinguir.
 
@@ -20,17 +21,17 @@
 
 Elegimos cinco criterios de evaluación. Los destacados en negrita son los elegidos.
 
-1. Claridad:
+1. **Claridad**:
 
    - ¿La redacción y las preguntas son claras y fáciles de entender?
    - ¿El propósito de la pregunta de investigación está bien definido?
 
-2. Relevancia:
+2. **Relevancia**:
 
    - ¿Se relacionan las preguntas directamente con los elementos propios de los hábitats y las comunidades ecológicas?
    - ¿Es relevante para el campo de la biogeografía?
 
-3. Especificidad:
+3. **Especificidad**:
 
    - ¿Las preguntas son específicas como para guiar una investigación detallada?
    - ¿Evita preguntas vagas o demasiado generales?
@@ -40,7 +41,7 @@ Elegimos cinco criterios de evaluación. Los destacados en negrita son los elegi
    - ¿La pregunta demuestra un entendimiento claro del contexto teórico y científico en el que se encuentra la biogeografía/ecología?
    - ¿Hace referencia a teorías o conceptos pertinentes?
 
-5. Viabilidad y factibilidad:
+5. **Viabilidad y factibilidad**:
 
    - ¿Las preguntas son abordables y pueden ser investigadas dentro de un marco de tiempo y recursos razonables?
    - ¿Considera las limitaciones prácticas de la investigación?
@@ -50,7 +51,7 @@ Elegimos cinco criterios de evaluación. Los destacados en negrita son los elegi
    - ¿Las preguntas muestran un enfoque original o una perspectiva novedosa hacia las comunidades ecológicas y, en general, a la biogeografía?
    - ¿Proponen nuevas ideas o enfoques?
 
-7. Métodos de observación:
+7. **Métodos de observación**:
 
    - ¿Las preguntas sugieren métodos de observación apropiados para analizar comunidades ecológicas y/o hábitats en cuestión?
    - ¿Consideran la disponibilidad de datos y herramientas?
@@ -103,3 +104,15 @@ Elegimos cinco criterios de evaluación. Los destacados en negrita son los elegi
 - No se demuestra entendimiento del tema, y no se aporta contexto teórico.
 - En la descripción, sólo se explican detalles inconexos.
 - Las preguntas presentadas son insuficientes.
+
+## Solución aportada por el tali
+
+La figura muestra el polígono principal del campus de la UASD, donde se aloja su Sede, se localiza en la denominada Ciudad Universitaria, al sur del Distrito Nacional de Santo Domingo, capital de la República Dominicana. Tiene una extensión de ## metros cuadrados, y se encuentra a una elevación promedio de 15 metros sobre el nivel del mar. Estas limitado al norte por la calle José Contreras, al sur por la Correa y Cidrón, al este por la Santo Tomás de Aquino y al oeste por la ??.
+Superpuesto al polígono, se ha incluido un índice de hexágonos H3 (h3geo.org), el cual consiste en un sistema geoespacial de código abierto que utiliza celdas hexagonales para indexar el mundo, ofreciendo funciones para manipular y analizar dichas celdas, creado por Uber Technologies. Adicionalmente, la figura incluye una capa de cuatro coberturas del suelo, que son: dosel, suelo con herbáceas o sin ellas, edificios erguida y construcciones (mobiliario, edificios, acertado, etc.).
+
+Usando este mapa como fuente para el diseño de un estudio sobre hormigas, me planteo las siguientes preguntas de investigación:
+¿La diversidad de hormigas es baja, en las áreas construidas o con edificaciones?
+En esas mismas áreas, ¿la equidad es igualmente baja?
+¿Existe asociación de unas especies de hormigas con la cobertura dosel?
+La información del mapa no es suficiente, pero me encantaría poder responder esta pregunta: 
+En las áreas de acumulación de basura, ¿predominan especies especies ubicuas o cosmopolitas?
