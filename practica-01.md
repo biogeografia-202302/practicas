@@ -5,7 +5,7 @@
 1. Observa el mapa a continuación:
 
 ![](img/campus-uasd-sede-coberturas-h3-res-11.jpg)
-Figura 1. Polígono núcleo del campus de la Universidad Autónoma de Santo Domingo en su sede central. Superpuestos y mezclados con imagen satélital Maxar (tomada desde Google Satellite), se muestran cuatro tipos de coberturas y hexágonos H3 de resolución 11.
+**Figura 1**. Mapa síntesis del polígono núcleo del campus de la Universidad Autónoma de Santo Domingo (UASD) en su sede central. Superposición de  hexágonos H3 y coberturas del suelo (fuente: Martínez-Batlle, 2023).
 
 2. Presta atención a los cuatro tipo de "coberturas". Si tienes dudas sobre alguno, hazme consulta. No hay mucho que documentarse sobre éstas coberturas, sólo que es importante que las puedas distinguir.
 
@@ -107,12 +107,28 @@ Elegimos cinco criterios de evaluación. Los destacados en negrita son los elegi
 
 ## Solución aportada por el tali
 
-La figura muestra el polígono principal del campus de la UASD, donde se aloja su Sede, se localiza en la denominada Ciudad Universitaria, al sur del Distrito Nacional de Santo Domingo, capital de la República Dominicana. Tiene una extensión de ## metros cuadrados, y se encuentra a una elevación promedio de 15 metros sobre el nivel del mar. Estas limitado al norte por la calle José Contreras, al sur por la Correa y Cidrón, al este por la Santo Tomás de Aquino y al oeste por la ??.
-Superpuesto al polígono, se ha incluido un índice de hexágonos H3 (h3geo.org), el cual consiste en un sistema geoespacial de código abierto que utiliza celdas hexagonales para indexar el mundo, ofreciendo funciones para manipular y analizar dichas celdas, creado por Uber Technologies. Adicionalmente, la figura incluye una capa de cuatro coberturas del suelo, que son: dosel, suelo con herbáceas o sin ellas, edificios erguida y construcciones (mobiliario, edificios, acertado, etc.).
+> 5. Tan pronto hayas comprendido cada una de las partes, redacta, en dos párrafos, una descripción del mapa en cuestión. No te preocupes si omites detalles técnicos o si no conoces en detalle las coberturas. Céntrate en describir lo que ves en el mapa, los patrones espaciales que ves en relación con dichos elementos.
+
+La figura 1 muestra el mapa del polígono núcleo del campus de la UASD en su sede central, localizado en la denominada Ciudad Universitaria, al sur del Distrito Nacional de Santo Domingo, capital de la República Dominicana. Tiene una extensión de 0.476 km<sup>2</sup>, y se encuentra a una elevación promedio de 15 metros sobre el nivel del mar. El polígono está limitado al norte por la calle José Contreras, al sur por la Correa y Cidrón, al este por la Santo Tomás de Aquino y al oeste por las calles José Dolores Alfonseca y Rafael Sánchez Ravelo.
+
+Superpuesta al polígono núcleo, se incluye una capa vectorial conteniendo la porción intersectada del índice espacial de hexágonos H3, resolución 11 (Uber Technologies Inc., 2023). Este índice consiste en un sistema geoespacial de código abierto que utiliza celdas hexagonales para indexar el mundo, ofreciendo funciones para manipular y analizar dichas celdas. Los índices espaciales de celdas hexagonales tienen múltiples ventajas sobre los de celdas cuadradas y rectangulares, siendo las principales las siguientes: las distancia entre los centros son constantes, no distorsionan la conectividad entre celdas y el efecto de borde es mínimo.
+
+Adicionalmente, se incluye una capa vectorial de coberturas del suelo destacada en el mapa de síntesis, la cual contiene cuatro coberturas básicas, que son: dosel, suelo con herbáceas o sin ellas, edificación erguida y espacios con construcciones-mobiliario (bordes de edificios, acerado, accesos, etc.) (Martínez-Batlle, 2023). La cobertura predominante corresponde a los espacios construidos (pero no edificaciones erguidas), con más de 33%, mientras que las restantes ocupan ca. 22% cada una. En cuanto a la distribución espacial, la cobertura dosel arbóreo (también arbustivo) se distribuye en casi todo el campus, pero con una mayor concentración en el entorno de las facultades de Ciencia, Arte e Ingeniería. La cobertura "suelo con herbáceas" se concentra especialmente al este, en el área de los "plays" y campo de fútbol. Las áreas de edificaciones erguidas, así como los espacios con mobiliario y acerado, están repartidos por todo el campus.
+
+> 6. Formula tres preguntas de investigación que entiendas se pueden resolver con el diseño mostrado en el mapa, asumiendo que colectarías hormigas en una selección de cinco hexágonos de coberturas variadas. Las preguntas deben poner en asociación "hábitats" y comunidad de hormigas.
 
 Usando este mapa como fuente para el diseño de un estudio sobre hormigas, me planteo las siguientes preguntas de investigación:
-¿La diversidad de hormigas es baja, en las áreas construidas o con edificaciones?
+
+- ¿La diversidad de hormigas es baja, en las áreas construidas o con edificaciones?
 En esas mismas áreas, ¿la equidad es igualmente baja?
-¿Existe asociación de unas especies de hormigas con la cobertura dosel?
-La información del mapa no es suficiente, pero me encantaría poder responder esta pregunta: 
-En las áreas de acumulación de basura, ¿predominan especies especies ubicuas o cosmopolitas?
+
+- ¿Existe asociación de unas especies de hormigas con la cobertura dosel?
+
+- Aunque quizá la información disponible en el mapa no es suficiente, pero me encantaría poder responder esta pregunta: en las áreas de acumulación de basura, ¿predominan especies ubicuas/cosmopolitas?
+
+## Referencias
+
+Martínez Batlle, JR. (2023). geofis/coberturas-suelo-uasd: Coberturas del suelo del polígono núcleo del campus de la Universidad Autónoma de Santo Domingo (UASD) en su sede central (v0.9). Zenodo. https://doi.org/10.5281/zenodo.8353988
+
+Uber Technologies, Inc. (2023). H3. Sistema jerárquico de indexación geoespacial hexagonal. Recuperado desde https://h3geo.org/docs
+
