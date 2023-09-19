@@ -55,21 +55,21 @@ vector_abundancias <- c(
   sample(c(rpois(3, sample(x = 5:8, size = 1)), rep(0, 3))),
   rep(sample(5:8, 1), 3))
 vector_abundancias <- ifelse(vector_abundancias > 10, 10, vector_abundancias)
-ma <- data.frame(matrix(#Estas líneas generan la matriz de comunidad
+mc <- data.frame(matrix(#Estas líneas generan la matriz de comunidad
   data = vector_abundancias,
   nrow=3, ncol=3, byrow = T))
-ma[which(rowSums(ma)==0), ] <- c(0, 0, sample(5:8, 1))
+mc[which(rowSums(mc)==0), ] <- c(0, 0, sample(5:8, 1))
 nombres_columnas <- paste('especie', 1:3)
-colnames(ma) <- nombres_columnas
+colnames(mc) <- nombres_columnas
 nombres_filas <- paste('sitio', 1:3)
-rownames(ma) <- nombres_filas
-ma #Imprime la matriz de comunidad
+rownames(mc) <- nombres_filas
+mc #Imprime la matriz de comunidad
 ```
 
 Este es un ejemplo de matriz de comunidad, pero recuerda usar la tuya propia obtenida al ejecutar el código en [rdrr.io](https://rdrr.io/snippets/).
 
 ```{r, echo=F}
-ma %>%
+mc %>%
   rownames_to_column(var = ' ') %>% estilo_kable() %>% 
   column_spec(1, bold = TRUE)
 ```
@@ -80,7 +80,7 @@ Así se verían, en un espacio tridimensional, la localización de los sitios en
 
 ```{r, echo=F, inlude=F}
 library(scatterplot3d)
-scatterplot3d(ma$`especie 1`, ma$`especie 2`, ma$`especie 3`,
+scatterplot3d(mc$`especie 1`, mc$`especie 2`, mc$`especie 3`,
               color = "red", pch = 16, cex.symbols = 2, angle = 25,
               main = "Gráfico de Dispersión 3D",
               xlab = 'Especie 1', ylab = 'Especie 2', zlab = 'Especie 3',
@@ -120,7 +120,7 @@ matriz_distancias %>%
 Este es un ejemplo real de una matriz de distancias (nota las repeticiones y los ceros):
 
 ```{r, echo=F, inlude=F}
-as.matrix(dist(ma, diag = T, upper = T)) %>%
+as.matrix(dist(mc, diag = T, upper = T)) %>%
   as.data.frame() %>% 
   rownames_to_column(var = ' ') %>% estilo_kable() %>% 
   column_spec(1, bold = TRUE)

@@ -45,15 +45,15 @@ vector_abundancias <- c(
   sample(c(rpois(3, sample(x = 5:8, size = 1)), rep(0, 3))),
   rep(sample(5:8, 1), 3))
 vector_abundancias <- ifelse(vector_abundancias > 10, 10, vector_abundancias)
-ma <- data.frame(matrix(#Estas líneas generan la matriz de comunidad
+mc <- data.frame(matrix(#Estas líneas generan la matriz de comunidad
   data = vector_abundancias,
   nrow=3, ncol=3, byrow = T))
-ma[which(rowSums(ma)==0), ] <- c(0, 0, sample(5:8, 1))
+mc[which(rowSums(mc)==0), ] <- c(0, 0, sample(5:8, 1))
 nombres_columnas <- paste('especie', 1:3)
-colnames(ma) <- nombres_columnas
+colnames(mc) <- nombres_columnas
 nombres_filas <- paste('sitio', 1:3)
-rownames(ma) <- nombres_filas
-ma #Imprime la matriz de comunidad
+rownames(mc) <- nombres_filas
+mc #Imprime la matriz de comunidad
 ```
 
 Este es un ejemplo de matriz de comunidad, pero recuerda usar la tuya
