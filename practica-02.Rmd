@@ -34,7 +34,8 @@ estilo_kable <- function(df, titulo = '', cubre_anchura = T) {
 }
 ```
 
-> Fecha de entrega: 25 de septiembre, 23:59 horas.
+> Fecha de entrega: ¡PLAZO EXTENDIDO!
+> 1 de octubre, 23:59 horas.
 
 Comenzarás tu manuscrito con la asignación de la próxima semana, y con esta práctica vas a "calentar motores". Tanto el fondo como la forma de dicho ensayo son importantes. En cuanto al fondo, es decir, el tema y su desarrollo, tratará **sobre hormigas del polígono núcleo del campus de la Universidad Autónoma de Santo Domingo (UASD) en su sede central**.
 

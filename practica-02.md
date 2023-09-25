@@ -7,7 +7,7 @@ Santo Domingo, República Dominicana
 
 <!-- README.md se genera a partir de README.Rmd. Por favor, edita ese archivo. -->
 
-> Fecha de entrega: 25 de septiembre, 23:59 horas.
+> Fecha de entrega: ¡PLAZO EXTENDIDO! 1 de octubre, 23:59 horas.
 
 Comenzarás tu manuscrito con la asignación de la próxima semana, y con
 esta práctica vas a “calentar motores”. Tanto el fondo como la forma de
