@@ -9,23 +9,35 @@ Santo Domingo, República Dominicana
 
 > Fecha de entrega: ¡PLAZO EXTENDIDO! 1 de octubre, 23:59 horas.
 
+> **ACTUALIZACIÓN. Entrega tu práctica en archivo(s) en formato nativo
+> (editable) del programa que hayas usado y, opcionalmente, en formato
+> PDF. Por ejemplo, si trabajaste tu documento en Microsoft Word, envía
+> el correspondiente archivo .docx o .doc. Si lo hiciste en LibreOffice
+> Writer, envía el archivo .odt o el que corresponda, pero que sea
+> nativo y editable. Si trabajaste en LaTeX, envía el archivo .tex y los
+> asociados a éste.**
+
 Comenzarás tu manuscrito con la asignación de la próxima semana, y con
 esta práctica vas a “calentar motores”. Tanto el fondo como la forma de
 dicho ensayo son importantes. En cuanto al fondo, es decir, el tema y su
 desarrollo, tratará **sobre hormigas del polígono núcleo del campus de
-la Universidad Autónoma de Santo Domingo (UASD) en su sede central**.
+la Universidad Autónoma de Santo Domingo (UASD) en su sede central**. El
+objetivo de esta práctica es que ensayes los aspectos básicos de la
+redacción científica.
 
-Esta práctica, basada en un sencillo conjunto de datos, te ayudará a
+Esta práctica se basa en un sencillo conjunto de datos, te ayudará a
 ensayar para que tu manuscrito—el cual comenzarás la próxima semana,
-reitero—quede como una investigación reproducible y bien redactada, es
-decir, que quede como un documento que cumpla con estilos de formato,
-uso apropiado de figuras, tablas, citas y referencias. Dividí la
-práctica en dos partes. En la primera parte, te ofrezco un ejercicio
-simple y ficticio de ecología numérica, que te servirá de excusa para
-mejorar tus habilidades analíticas y presentar resultados con nivel
-científico, antes de que comiences a colectar datos de campo y redactar
-formalmente tú manuscrito. En la segunda parte, te pido que formules las
-preguntas que responderás en tu manuscrito real de hormigas. Vamos allá.
+reitero—quede como una investigación reproducible, bien redactada y bien
+presentada, es decir, que quede como un documento que cumpla con los
+requisitos de disponibilidad de datos fuente y protocolo de análisis,
+así como con estilos de formato, uso apropiado de figuras, tablas, citas
+y referencias. Dividí la práctica en dos partes. En la primera parte, te
+ofrezco un ejercicio simple y ficticio de ecología numérica, que te
+servirá de excusa para mejorar tus habilidades analíticas y presentar
+resultados con nivel científico, antes de que comiences a colectar datos
+de campo y redactar formalmente tú manuscrito. En la segunda parte, te
+pido que formules las preguntas que responderás en tu manuscrito real de
+hormigas. Vamos allá.
 
 > En tutorías, estoy dispuesto a introducirles al uso de LaTeX, Overleaf
 > o RStudio para la redacción científica. Conversa con tus compañeros y
