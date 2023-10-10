@@ -112,7 +112,17 @@ De forma general, no olvides usar referencias bibliográficas. Por ejemplo, esta
 
 ## Criterios de evaluación y escala de valoración
 
+| Criterio de Evaluación                               | Nivel 1 (En desarrollo)                                       | Nivel 2 (Aceptable)                                | Nivel 3 (Bueno)                                     | Nivel 4 (Excelente)                                          |
+|-----------------------------------------------------|--------------------------------------------------------------|---------------------------------------------------|----------------------------------------------------|---------------------------------------------------------------|
+| **Instalación de QGIS**                             | No presenta evidencia de instalación.                        | Presenta intento de instalación con errores.      | Instalación correcta pero con omisión en detalles. | Instalación exitosa con captura clara y descripción adecuada. |
+| **Instalación del complemento QuickMapServices**    | No presenta evidencia de instalación del complemento.       | Instalación parcial sin mapas base visibles.      | Instalación correcta pero sin los *contributed packs*. | Instalación exitosa con captura clara mostrando mapas base.    |
+| **Instalación del complemento GBIF Occurrences**    | No presenta evidencia de instalación del complemento.       | Presenta intento de instalación con errores.      | Instalación correcta pero sin demostración visual. | Instalación exitosa con captura clara del complemento en uso.  |
+| **Visualización de datos de GBIF en QGIS**          | No presenta datos de GBIF en QGIS.                           | Datos presentados sin simbolización adecuada.     | Representación correcta con omisión en detalles.  | Representación impecable con simbolización por género.        |
+| **Aplicación de estilos en el documento**           | Falta de coherencia y uniformidad en estilos del documento.  | Aplicación básica de estilos sin refinamiento.    | Estilos bien aplicados con algunas omisiones menores. | Uso experto y consistente de estilos en todo el documento.      |
+| **Inclusión y calidad de figuras y pies de figuras**| Ausencia o irrelevancia de figuras. Pies de figuras faltantes. | Figuras de baja calidad o pies de figuras imprecisos. | Figuras claras con pies de figuras adecuados.     | Figuras de alta calidad con pies de figuras detallados y precisos.|
+| **Uso de referencias bibliográficas**               | Ausencia de referencias.                                     | Uso mínimo o inadecuado de referencias.           | Uso correcto de las referencias básicas.          | Uso extensivo y adecuado de referencias, incluyendo fuentes adicionales.|
 
+**Nota:** La evaluación de cada criterio debe ser basada en el desempeño del estudiante y la evidencia presentada en su entrega. Es vital proporcionar retroalimentación constructiva para que el estudiante comprenda las áreas de mejora.
 
 
 ## Referencias
