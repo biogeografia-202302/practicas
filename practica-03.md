@@ -66,10 +66,11 @@ permitirá cargar mapas base como Google Maps o OpenStreetMap.
     “Settings” \> Pestaña “More services” \> Botón “Get contributed
     packs”.
 6.  Una vez instalado y activados los *contributed packs*, regresa a la
-    ventana principal de QGIS y haz clic en el icono de
-    “QuickMapServices” o dirígete a “Web” \> “QuickMapServices” y elige
-    un mapa base, como Google Maps o OpenStreetMap; explora otras
-    opciones, como las de CartoDB, Stamen, Bing y ESRI.
+    ventana principal de QGIS y haz clic en el menú “Web” \>
+    “QuickMapServices” y elige un mapa base, como Google Maps o
+    OpenStreetMap; explora otras opciones, como las de CartoDB, Stamen,
+    Bing y ESRI. Enfócaño en el área de República Dominicana, usando la
+    herramienta de Zoom convenientemente.
 
 **Entrega:** Párrafo resumen del proceso realizado y captura de pantalla
 de QGIS con un mapa base cargado, por ejemplo, Google Maps.
@@ -87,7 +88,10 @@ biodiversidad directamente desde GBIF.
 2.  Busca “GBIF Occurrences” y haz clic en “Instalar complemento”.
 3.  Una vez instalado, podrás acceder al complemento desde el menú
     “Vector” \> “GBIF Occurrences” \> “Load GBIF Occurrences”.
-4.  Haz búsqueda de la familia que hayas elegido.
+4.  Haz búsqueda de la familia que hayas elegido, restringiendo sólo
+    para República Dominicana, porque si realizas una búsqueda global,
+    el complemento podría devolver numerosos registros difíciles de
+    manejar.
 
 **Entrega:** Párrafo resumen del proceso realizado y captura de pantalla
 mostrando el complemento “GBIF Occurrences” instalado y disponible en
@@ -101,19 +105,25 @@ captura de pantalla\]
 **Resumen:** Aprenderás a visualizar datos biogeográficos de GBIF en
 QGIS.
 
-1.  Visita <https://www.gbif.org/> y busca una familia de organismos de
-    tu elección (asegúrate de no elegir la misma familia que otro
-    compañero).
-2.  Descarga los registros en formato CSV.
-3.  En QGIS, dirígete a “Capa” \> “Añadir capa” \> “Añadir capa de texto
+1.  Visita <https://www.gbif.org/> para acceder la interfaz web de GBIF.
+    Esta interfaz antes proporcionaba descargas sin necesidad de
+    registrarte en el servicio, pero ahora es prácticamene obligatorio
+    crearte una cuenta, así que, tendrás que crearla.
+2.  Busca una familia de organismos de tu elección (asegúrate de no
+    elegir la misma familia que otro compañero o compañera),
+    restringiendo sólo para República Dominicana, porque si realizas una
+    búsqueda global, el complemento podría devolver numerosos registros
+    difíciles de manejar.
+3.  Descarga los registros en formato CSV.
+4.  En QGIS, dirígete a “Capa” \> “Añadir capa” \> “Añadir capa de texto
     delimitado”.
-4.  Busca y selecciona el CSV descargado.
-5.  Asegúrate de que las coordenadas se interpreten correctamente y
+5.  Busca y selecciona el CSV descargado.
+6.  Asegúrate de que las coordenadas se interpreten correctamente y
     agrega la capa.
-6.  Dirígete a las propiedades de la capa y en la sección “Símbolo”,
+7.  Dirígete a las propiedades de la capa y en la sección “Símbolo”,
     elige una simbolización por color basada en el género de los
     organismos.
-7.  Asegúrate de usar una base cartográfica de fondo, como
+8.  Asegúrate de usar una base cartográfica de fondo, como
     OpenStreetMap, que sirva de referencia territorial.
 
 **Entrega:** Párrafo resumen del proceso realizado y captura de pantalla
