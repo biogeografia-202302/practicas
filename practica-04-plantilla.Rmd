@@ -29,7 +29,7 @@ params:
 require(knitr)
 opts_chunk$set(
   concordance=FALSE,
-  echo=FALSE,
+  echo=TRUE,
   cache=FALSE,
   warning=FALSE,
   error=FALSE,
@@ -47,6 +47,7 @@ library(kableExtra)
 library(foreach)
 library(leaps)
 library(caret)
+r <- 'R/'
 gh_content <- 'https://raw.githubusercontent.com/'
 gh_zonal_stats <- paste0(gh_content,
                          'geofis/zonal-statistics/0b2e95aaee87bf326cf132d28f4bd15220bb4ec7/out/')
@@ -56,21 +57,21 @@ devtools::source_url(paste0(gh_content, repo_analisis, '/biodata/funciones.R'))
 devtools::source_url(paste0(gh_content, repo_sem202202, 'train.R'))
 devtools::source_url(paste0(gh_content, repo_sem202202, 'funciones.R'))
 fuentes_practica <- 'fuentes/practica-04/'
+source(paste0(r, 'funciones.R'))
 ```
 
 Cargar la matriz de comunidad.
 
 ```{r}
 mc <- read.csv(paste0(fuentes_practica, 'matriz-comunidad-', params$estudiante, '.csv'))[,-1]
-nrow(mc) #Número de filas, equivale a número de sitios muestreados con registros de presencia
-ncol(mc)  #Número de columnas, equivale a número de especies, riqueza
+# nrow(mc) #Número de filas, equivale a número de sitios muestreados con registros de presencia
+# ncol(mc)  #Número de columnas, equivale a número de especies, riqueza
 data.frame(Especies = names(mc)) %>% 
   kable(booktabs=T) %>%
   kable_styling(latex_options = c("HOLD_position", "scale_down")) %>%
   gsub(' NA ', '', .) #Lista de especies
-unique(word(names(mc), 1, 1)) #Géneros representados
-table(word(names(mc), 1, 1)) #Número de especies por género
-data.frame(`Número de hexágonos` = sort(colSums(mc), decreasing = T), check.names = F) %>% 
+# table(word(names(mc), 1, 1)) #Número de especies por género
+data.frame(`Número de sitios donde fue reportada la especie` = sort(colSums(mc), decreasing = T), check.names = F) %>% 
   kable(booktabs=T) %>%
   kable_styling(latex_options = c("HOLD_position", "scale_down")) %>%
   gsub(' NA ', '', .) # Número de hexágonos en los que está presente cada especie
@@ -79,7 +80,7 @@ data.frame(`Número de hexágonos` = sort(colSums(mc), decreasing = T), check.na
 Transformar la matriz de comunidad. Este paso es importante, lo explico [aquí](https://www.youtube.com/watch?v=yQ10lp0-nHc&list=PLDcT2n8UzsCRDqjqSeqHI1wsiNOqpYmsJ&index=10)
 
 ```{r}
-mc_t <- decostand(mc, 'hellinger') #Hellinger
+mc_t <- decostand(mc, 'hellinger') #Hellinger, funciona con datos de presencia/ausencia
 # Otras transformaciones posibles con datos de presencia/ausencia
 # mc_t <- decostand(mc, 'normalize') #Chord
 # mc_t <- decostand(log1p(mc), 'normalize') #Chord
@@ -94,12 +95,397 @@ env <- read_csv(paste0(fuentes_practica, 'matriz-ambiental-', params$estudiante,
 all(rownames(mc) == rownames(env)) #Si es TRUE, se sigue adelante
 ```
 
+## Análisis de agrupamiento
+
+A continuación, el **análisis de agrupamiento** propiamente. La parte más importante es generar un árbol, a partir de una matriz de distancias, que haga sentido desde el punto de vista de la comunidad y la distribución de las especies. Primero cargaré paquetes específicos de esta técnica y generaré la matriz de distancias.
+
+```{r}
+library(broom)
+library(cluster)
+library(gclus)
+library(pvclust)
+mc_d <- vegdist(mc_t, "euc")
+```
+
+A continuación, generaré árboles usando distintos métodos. Explico detalladamente estas técnicas en el [repo](https://github.com/biogeografia-master/scripts-de-analisis-BCI), y en los vídeos (13 a 16) de la lista mencionada arriba  ["Ecología Numérica con R" de mi canal](https://www.youtube.com/playlist?list=PLDcT2n8UzsCRDqjqSeqHI1wsiNOqpYmsJ).
+
+```{r, fig.width=9, fig.height=9, dpi=300}
+lista_cl <- list(
+        cl_single = hclust(mc_d, method = 'single'),
+        cl_complete = hclust(mc_d, method = 'complete'),
+        cl_upgma = hclust(mc_d, method = 'average'),
+        cl_ward = hclust(mc_d, method = 'ward.D2')
+)
+par(mfrow = c(2,2))
+invisible(map(names(lista_cl), function(x) plot(lista_cl[[x]], main = x, hang = -1)))
+par(mfrow = c(1,1))
+```
+
+A continuación, **calcularé la distancia y la correlación cofenéticas; esta última, la correlación cofenética,se utiliza como criterio flexible para elegir el método de agrupamiento idóneo, pero no debe usarse de manera estricta**. Se supone que el método con la mayor correlación cofenética explica mejor el agrupamiento de la comunidad. Si quieres comprender mejor esta técnica, consulta el vídeo que te referí en el párrafo anterior, así como los libros de referencia. Normalmente, el método UPGMA obtiene la mayor correlación cofenética, pero esto se debe a que su procedimiento de obtención maximiza precisamente dicha métrica. No es recomendable conservar un único método de agrupamiento, normalmente es bueno usar al menos dos. Ward es muchas veces recomendado como método de contraste, por basarse en procedimientos de cálculo muy distintos a los de UPGMA.
+
+```{r}
+map_df(lista_cl, function(x) {
+        coph_d <- cophenetic(x)
+        corr <- cor(mc_d, coph_d)
+        return(corr)
+})
+```
+
+Ahora, calcularé **las anchuras de silueta, una métrica que ayuda a determinar en cuántos grupos se organiza la comunidad; las anchuras de silueta no deben usarse como método estricto, y sólo debe usarse de forma flexible para informarnos sobre el número máximo de grupos posibles**. Considera las siguientes reglas:
+
+  - El número ideal es 3 grupos, de 4 a 5 grupos es aceptable, 6 o más grupos se considera difícil de interpretar, o es un resultado poco útil; 1 grupo es un resultado sin sentido.
+  - Si obtienes distintos grupos, **pero uno o varios están compuestos por un único sitio, observa qué ocurre en ese sitio**, pues es probable que contenga especie raras sólo presentes en él. En este caso, es recomendable explorar dos alternativas para evitar el grupo formado por un único sitio: ver qué ocurre usando distintos métodos o elegir cortar el árbol en un número de grupos menor.
+
+### Anchuras de siluetas para método UPGMA
+
+```{r}
+# UPGMA
+anch_sil_upgma <- calcular_anchuras_siluetas(
+        mc_orig = mc, 
+        distancias = mc_d, 
+        cluster = lista_cl$cl_upgma)
+anch_sil_upgma
+u_dend_reord <- reorder.hclust(lista_cl$cl_upgma, mc_d)
+plot(u_dend_reord, hang = -1)
+rect.hclust(
+        tree = u_dend_reord,
+        k = anch_sil_upgma$n_grupos_optimo)
+resultado_evaluacion_upgma <- evaluar_arbol(u_dend_reord, anch_sil_upgma$n_grupos_optimo)
+```
+
+Tras cortar el árbol, la evaluación practicada recomendó lo siguiente: **"`r resultado_evaluacion_upgma`"**
+
+### Anchuras de siluetas para método Ward
+
+```{r}
+# Ward
+anch_sil_ward <- calcular_anchuras_siluetas(
+        mc_orig = mc, 
+        distancias = mc_d, 
+        cluster = lista_cl$cl_ward)
+anch_sil_ward
+w_dend_reord <- reorder.hclust(lista_cl$cl_ward, mc_d)
+plot(w_dend_reord, hang = -1)
+rect.hclust(
+        tree = w_dend_reord,
+        k = anch_sil_ward$n_grupos_optimo)
+resultado_evaluacion_ward <- evaluar_arbol(w_dend_reord, anch_sil_ward$n_grupos_optimo)
+```
+
+Tras cortar el árbol, la evaluación practicada recomendó lo siguiente: "`r resultado_evaluacion_ward`".
+
+### Remuestreo por *bootstrap* multiescalar
+
+Una forma alterna de evaluar árboles consiste en usar el remuestreo por *bootstrap* multiescalar. No me interesa que profundices en ella, sólo presentártela como técnica probabilística para evaluar árboles generados por métodos determinísticos. La técnica es documentada en @borcard2018numerical, de la cual puedes un resumen en [este cuaderno](https://github.com/biogeografia-master/scripts-de-analisis-BCI/blob/master/aa_analisis_de_agrupamiento_2_intepretacion_resultados.md#evaluaci%C3%B3n-mediante-remuestreo-por-bootstrap-multiescalar) y en [este vídeo (minuto 51:33)](https://youtu.be/y1ZZh9ajT_U?list=PLDcT2n8UzsCRDqjqSeqHI1wsiNOqpYmsJ&t=3093). El remuestreo por *bootstrap* multiescalar valida la robustez de los análisis de agrupamiento tomando múltiples muestras aleatorias de los datos en diferentes tamaños. Este proceso determina qué grupos son consistentemente identificados como clústeres, generando valores de probabilidad aproximadamente insesgados (AU) que son considerados más fiables que las probabilidades de *bootstrap* tradicionales (BP). Esta técnica ayuda a identificar y confirmar patrones robustos en los datos.
+
+Lo aplicaré primero al árbol generado por el método UPGMA.
+
+```{r}
+# UPGMA
+if(interactive()) dev.new()
+cl_pvclust_upgma <-
+        pvclust(t(mc_t),
+                method.hclust = "average",
+                method.dist = "euc",
+                iseed = 99, # Resultado reproducible
+                parallel = TRUE)
+# Añadir los valores de p
+plot(cl_pvclust_upgma, hang = -1)
+# Añadir rectángulos a los grupos significativos
+lines(cl_pvclust_upgma)
+pvrect(cl_pvclust_upgma, alpha = 0.90, border = 4)
+```
+
+Lo aplicaré también al árbol generado por el método Ward.
+
+```{r}
+# Ward
+if(interactive()) dev.new()
+cl_pvclust_ward <-
+        pvclust(t(mc_t),
+                method.hclust = "ward.D2",
+                method.dist = "euc",
+                iseed = 99, # Resultado reproducible
+                parallel = TRUE)
+# Añadir los valores de p
+plot(cl_pvclust_ward, hang = -1)
+# Añadir rectángulos a los grupos significativos
+lines(cl_pvclust_ward)
+pvrect(cl_pvclust_ward, alpha = 0.91, border = 4)
+```
+
+### Conclusión sobre agrupamiento
+
+Basado en todo lo anterior, generaré elegido un método de agrupamiento y un número de grupos, y lo exportaré a un archivo que posteriormente podré reaprovechar.
+
+
+
 ```{r}
 knitr::knit_exit()
 ```
 
 
-## 
+```{r}
+grupos_seleccionados <- seleccionar_y_cortar_arbol(
+  resultado_evaluacion_upgma = resultado_evaluacion_upgma,
+  resultado_evaluacion_ward = resultado_evaluacion_ward)
+
+# Guardaré estos vectores en archivos para reutilizarlos en *scripts* posteriores: 
+saveRDS(grupos_upgma, 'grupos_upgma_acanthaceae.RDS')
+saveRDS(grupos_ward, 'grupos_ward_acanthaceae.RDS')
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Grupos (clústers), variables ambientales y mapas
+
+> No olvides ejecutar la parte de código común y reutilizable situada arriba. Esta subsección necesita de objetos creados en líneas de código previas.
+
+Apliquemos el análisis de agrupamiento a la matriz ambiental. La clave en este punto es que, si la matriz ambiental presenta patrones parecidos a los de la matriz de comunidad, significa que el agrupamiento utilizado hace sentido entre ambos conjuntos de datos (comunidad y hábitat) de forma consistente. Si ambos conjuntos de datos son consistentes, significa que existe algún grado de asociación.
+
+Cargar paquetes necesarios para esta subsección.
+
+```{r}
+library(RColorBrewer)
+library(leaflet)
+library(leaflet.extras)
+```
+
+Agrupar los hexágonos de la matriz ambiental.
+
+```{r}
+(m_amb_upgma <- env %>%
+   rownames_to_column('hex_id') %>% 
+   mutate(grupos_upgma) %>%
+   pivot_longer(-c(grupos_upgma, hex_id), names_to = "variable", values_to = "valor") %>% 
+   inner_join(za %>% select(hex_id)))
+
+(m_amb_ward <- env %>%
+    rownames_to_column('hex_id') %>% 
+    mutate(grupos_ward) %>%
+    pivot_longer(-c(grupos_ward, hex_id), names_to = "variable", values_to = "valor") %>% 
+    inner_join(za %>% select(hex_id)))
+```
+
+Evaluar efectos entre los grupos ("diferencias significativas") de los agrupamientos UPGMA y Ward. Al tratarse de 6 grupos, se utilizan las pruebas estadísticas ANOVA (evalúa homongeneidad de medias) y Kruskal-Wallis (evalúa homogeneidad de medianas). Las tablas están ordenadas en orden ascendente por la columna `p_valor_a`, que son los p-valores de la prueba ANOVA.
+
+```{r}
+# UPGMA
+m_amb_upgma_ak <- m_amb_upgma %>%
+  group_by(variable) %>%
+  summarise(
+    p_valor_a = tryCatch(oneway.test(valor ~ grupos_upgma)$p.value, error = function(e) NA),
+    p_valor_k = tryCatch(kruskal.test(valor ~ grupos_upgma)$p.value, error = function(e) NA)
+    ) %>%
+  arrange(p_valor_a)
+m_amb_upgma_ak %>%
+  kable(booktabs=T) %>%
+  kable_styling(latex_options = c("HOLD_position", "scale_down")) %>%
+  gsub(' NA ', '', .)
+
+# Ward
+m_amb_ward_ak <- m_amb_ward %>%
+  group_by(variable) %>%
+  summarise(
+    p_valor_a = tryCatch(oneway.test(valor ~ grupos_ward)$p.value, error = function(e) NA),
+    p_valor_k = tryCatch(kruskal.test(valor ~ grupos_ward)$p.value, error = function(e) NA)
+    ) %>%
+  arrange(p_valor_a)
+m_amb_ward_ak %>%
+  kable(booktabs=T) %>%
+  kable_styling(latex_options = c("HOLD_position", "scale_down")) %>%
+  gsub(' NA ', '', .)
+```
+
+EXPLORA TUS RESULTADOS (usa como referencia [practica-99-tu-manuscrito-3-resultados.md](../practica-99-tu-manuscrito-3-resultados.md) y el vídeo correspondiente a tu caso)
+
+
+```{r, fig.width=9, fig.height=12, dpi=300}
+remesas <- list(primera = colnames(env)[1:68], segunda = colnames(env)[69:136])
+map(1:2,
+    function(x) {
+      m_amb_upgma %>% 
+        filter(variable %in% remesas[[x]]) %>% 
+        group_by(variable) %>% 
+        ggplot() + aes(x = grupos_upgma, y = valor, fill = grupos_upgma) + 
+        geom_boxplot(lwd = 0.2) + 
+        scale_fill_brewer(palette = 'Set1') +
+        theme_bw(base_size=6) +
+        theme(legend.position="none") +
+        facet_wrap(~ variable, scales = 'free_y', ncol = 8)
+    })
+map(1:2,
+    function(x) {
+      m_amb_ward %>% 
+        filter(variable %in% remesas[[x]]) %>% 
+        group_by(variable) %>% 
+        ggplot() + aes(x = grupos_ward, y = valor, fill = grupos_ward) + 
+        geom_boxplot(lwd = 0.2) + 
+        scale_fill_brewer(palette = 'Set1') +
+        theme_bw(base_size=6) +
+        theme(legend.position="none") +
+        facet_wrap(~ variable, scales = 'free_y', ncol = 8)
+    })
+```
+
+En los diagramas de caja, notarás que, las variables que aparecen en las primeras filas de las tablas anteriores, son las mismas que presentan mayor variabilidad de las cajas. Sigo con el ejemplo de las variables `GFC-LOSS year 2020`, `ESA Open Water` y `G90-GEOM footslope`, y nota que las anchuras de sus cajas, sus bigotes y la posición de la mediana (línea interior de la caja), fluctúa mucho entre grupos.
+
+El objetivo de adjuntarle, a la matriz ambiental, el vector de agrupamiento generado a partir de datos de comunidad, consiste en caracterizar ambientalmente los hábitats de los subgrupos diferenciados según su composición. Observa los resultados de las pruebas estadísticas, de los diagramas de caja, EXPLORA TUS RESULTADOS (usa como referencia [practica-99-tu-manuscrito-3-resultados.md](../practica-99-tu-manuscrito-3-resultados.md) y el vídeo correspondiente a tu caso):
+
+1. Hábitat del grupo 1.
+
+2. Hábitat del grupo 2. 
+
+3. Hábitats del grupo 3.
+
+A continuación, muestro mapas de los dos agrupamientos, tanto UPGMA como Ward, y comparo con algunas de las variables que presentaron efecto. Usando la función `mapa_leaflet` este bloque genera un mapa interactivo que colorea los hexágonos en función del grupo al que fueron asignados de acuerdo al análisis de agrupamiento realizado a la matriz de comunidad por el método UPGMA. Te recomiendo que uses la función `mapa_leaflet`, especificando tu matriz ambiental, la variable que quieras representar y un título, para generar mapas de tus propias variables seleccionadas.
+
+```{r}
+m_amb_clusters_sf <- env %>%
+  rownames_to_column('hex_id') %>% 
+  mutate(
+    grupos_upgma = as.character(grupos_upgma),
+    grupos_ward = as.character(grupos_ward)) %>%
+  inner_join(za %>% select(hex_id)) %>%
+  st_as_sf()
+mapa_upgma <- mapa_leaflet(
+  mapa = m_amb_clusters_sf,
+  variable = 'grupos_upgma',
+  titulo_leyenda = paste0('UPGMA, k=', k))
+mapa_upgma
+```
+
+Ídem anterior, pero según Ward.
+
+```{r}
+mapa_ward <- mapa_leaflet(
+  mapa = m_amb_clusters_sf,
+  variable = 'grupos_ward',
+  titulo_leyenda = paste0('Ward, k=', k))
+mapa_ward
+```
+
+El siguiente bloque de código representa, cartográficamente, algunas variables que mostraron inhomogeneidad en las pruebas estadísticas, es decir, variables en las que parecía haber diferencias significativas entre hexágonos de distintos grupos. Las variables que mostraron diferencias significativas podrían ayudar a explicar la varianza de la composición de la comunidad.
+
+```{r}
+m_amb_upgma_ak$variable[1:20]
+mapa_upgma_v1 <- mapa_leaflet(
+  mapa = m_amb_clusters_sf,
+  variable = m_amb_upgma_ak$variable[1],
+  titulo_leyenda = gsub('(.{1,25})(\\s|$)', '\\1<br>', m_amb_upgma_ak$variable[1]))
+mapa_upgma_v1
+mapa_upgma_v2 <- mapa_leaflet(
+  mapa = m_amb_clusters_sf,
+  variable = m_amb_upgma_ak$variable[2],
+  titulo_leyenda = gsub('(.{1,25})(\\s|$)', '\\1<br>', m_amb_upgma_ak$variable[2]))
+mapa_upgma_v2
+mapa_upgma_v6 <- mapa_leaflet(
+  mapa = m_amb_clusters_sf,
+  variable = m_amb_upgma_ak$variable[6],
+  titulo_leyenda = m_amb_upgma_ak$variable[6])
+mapa_upgma_v6
+mapa_upgma_v8 <- mapa_leaflet(
+  mapa = m_amb_clusters_sf,
+  variable = m_amb_upgma_ak$variable[8],
+  titulo_leyenda = m_amb_upgma_ak$variable[8])
+mapa_upgma_v8
+mapa_upgma_v16 <- mapa_leaflet(
+  mapa = m_amb_clusters_sf,
+  variable = m_amb_upgma_ak$variable[16],
+  titulo_leyenda = m_amb_upgma_ak$variable[16])
+mapa_upgma_v16
+```
+
+### Especies con preferencia/fidelidad con grupos (clústers)
+
+Paquete `indicspecies`.
+
+```{r}
+library(indicspecies)
+```
+
+Análisis de preferencia/fidelidad de especies con grupos (clusters), mediante el coeficiente de correlación biserial puntual.
+
+- UPGMA
+
+```{r}
+phi_upgma <- multipatt(
+  mc,
+  grupos_upgma,
+  func = "r.g",
+  max.order = 1,
+  control = how(nperm = 999))
+summary(phi_upgma)
+data.frame(abreviado = rownames(phi_upgma$sign)[which(phi_upgma$sign$p.value < 0.05)]) %>%
+  inner_join(df_equivalencias) %>%
+  arrange(abreviado) %>% 
+  kable(booktabs=T) %>%
+  kable_styling(latex_options = c("HOLD_position", "scale_down"))
+```
+
+- Ward
+
+```{r} 
+phi_ward <- multipatt(
+  mc,
+  grupos_ward,
+  func = "r.g",
+  max.order = 2,
+  control = how(nperm = 999))
+summary(phi_ward)
+data.frame(abreviado = rownames(phi_ward$sign)[which(phi_ward$sign$p.value < 0.05)]) %>%
+  inner_join(df_equivalencias) %>%
+  arrange(abreviado) %>% 
+  kable(booktabs=T) %>%
+  kable_styling(latex_options = c("HOLD_position", "scale_down"))
+```
+
+EXPLORA TUS RESULTADOS (usa como referencia [practica-99-tu-manuscrito-3-resultados.md](../practica-99-tu-manuscrito-3-resultados.md) y el vídeo correspondiente a tu caso)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -436,337 +822,6 @@ acumulacion_especies
 
 
 
-## Análisis de agrupamiento
-
-A continuación, el **análisis de agrupamiento** propiamente. La parte más importante es generar un árbol, a partir de una matriz de distancias, que haga sentido desde el punto de vista de la comunidad y la distribución de las especies tal como se encuentran en GBIF. Primero cargaré paquetes específicos de esta técnica y generaré la matriz de distancias.
-
-```{r}
-library(broom)
-library(cluster)
-library(gclus)
-library(pvclust)
-mc_d <- vegdist(mc_t, "euc")
-```
-
-A continuación, generaré árboles usando distintos métodos, explicados en el [repo](https://github.com/biogeografia-master/scripts-de-analisis-BCI), y en los vídeos (13 a 16) de la lista mencionada arriba  ["Ecología Numérica con R" de mi canal](https://www.youtube.com/playlist?list=PLDcT2n8UzsCRDqjqSeqHI1wsiNOqpYmsJ).
-
-```{r, fig.width=9, fig.height=9, dpi=300}
-lista_cl <- list(
-        cl_single = hclust(mc_d, method = 'single'),
-        cl_complete = hclust(mc_d, method = 'complete'),
-        cl_upgma = hclust(mc_d, method = 'average'),
-        cl_ward = hclust(mc_d, method = 'ward.D2')
-)
-par(mfrow = c(2,2))
-invisible(map(names(lista_cl), function(x) plot(lista_cl[[x]], main = x, hang = -1, cex = 0.3)))
-par(mfrow = c(1,1))
-```
-
-A continuación, calcularé la distancia y la correlación cofenéticas. Se supone que el método con la mayor correlación cofenética explica mejor el agrupamiento de la comunidad. Consulta el vídeo y material de referencia. Normalmente, el método UPGMA obtiene la mayor correlación cofenética, pero esto se debe a que su procedimiento maximiza precisamente dicha métrica. No es recomendable conservar un único método de agrupamiento, normalmente es bueno usar al menos dos. Ward es muchas veces recomendado por basarse en procedimientos de cálculo muy distintos a los de UPGMA. Consulta referencias.
-
-```{r}
-map_df(lista_cl, function(x) {
-        coph_d <- cophenetic(x)
-        corr <- cor(mc_d, coph_d)
-        return(corr)
-})
-```
-
-Ahora, calcularé las anchuras de silueta, una métrica que ayuda a determinar en cuántos grupos se organiza la comunidad. En el ejemplo, dado que muchas especies de Polygonaceae están ausentes en muchos hexágonos, es esperable que el procedimiento sugiera un número de grupos alto denominados (ver objeto impreso `n_grupos_optimos`). Considera la siguiente regla general: muchos grupos: el número ideal es 3 grupos, de 4 a 6 grupos es aceptable, 7 o más grupos se considera mucho y difícil de interpretar, es un resultado poco útil; 1 grupo es un resultado sin sentido.
-
-```{r}
-# UPGMA
-anch_sil_upgma <- calcular_anchuras_siluetas(
-        mc_orig = mc, 
-        distancias = mc_d, 
-        cluster = lista_cl$cl_upgma)
-anch_sil_upgma
-u_dend_reord <- reorder.hclust(lista_cl$cl_upgma, mc_d)
-plot(u_dend_reord, hang = -1)
-rect.hclust(
-        tree = u_dend_reord,
-        k = anch_sil_upgma$n_grupos_optimo)
-```
-
-Método Ward.
-
-```{r}
-# Ward
-anch_sil_ward <- calcular_anchuras_siluetas(
-        mc_orig = mc, 
-        distancias = mc_d, 
-        cluster = lista_cl$cl_ward)
-anch_sil_ward
-w_dend_reord <- reorder.hclust(lista_cl$cl_ward, mc_d)
-plot(w_dend_reord, hang = -1)
-rect.hclust(
-        tree = w_dend_reord,
-        k = anch_sil_ward$n_grupos_optimo)
-```
-
-EXPLORA TUS RESULTADOS (usa como referencia [practica-99-tu-manuscrito-3-resultados.md](../practica-99-tu-manuscrito-3-resultados.md) y el vídeo correspondiente a tu caso)
-
-```{r}
-# UPGMA
-if(interactive()) dev.new()
-cl_pvclust_upgma <-
-        pvclust(t(mc_t),
-                method.hclust = "average",
-                method.dist = "euc",
-                iseed = 999, # Resultado reproducible
-                parallel = TRUE)
-# Añadir los valores de p
-plot(cl_pvclust_upgma, hang = -1)
-# Añadir rectángulos a los grupos significativos
-lines(cl_pvclust_upgma)
-pvrect(cl_pvclust_upgma, alpha = 0.90, border = 4)
-```
-
-EXPLORA TUS RESULTADOS (usa como referencia [practica-99-tu-manuscrito-3-resultados.md](../practica-99-tu-manuscrito-3-resultados.md) y el vídeo correspondiente a tu caso)
-
-```{r}
-# Ward
-if(interactive()) dev.new()
-cl_pvclust_ward <-
-        pvclust(t(mc_t),
-                method.hclust = "ward.D2",
-                method.dist = "euc",
-                iseed = 999, # Resultado reproducible
-                parallel = TRUE)
-# Añadir los valores de p
-plot(cl_pvclust_ward, hang = -1)
-# Añadir rectángulos a los grupos significativos
-lines(cl_pvclust_ward)
-pvrect(cl_pvclust_ward, alpha = 0.91, border = 4)
-```
-
-Generaré agrupamientos y los exportaré a archivos, para reutilizarlos más adelante. Elegir un número de grupos no es tarea sencilla, por el momento probaré con el número de grupos `k` del siguiente bloque de código, el cual me permitirá caracterízar los distintos hábitats más fácilmente en función de las variables ambientales.
-
-```{r}
-k <- 3
-# UPGMA
-grupos_upgma <- as.factor(cutree(lista_cl$cl_upgma, k = k))
-set.seed(999);sample(grupos_upgma, 10) #¿A qué grupo pertenecen 10 hexágonos seleccionados al azar?
-table(grupos_upgma) #¿Cuántos hexágonos hay en cada grupo?
-plot(u_dend_reord, hang = -1)
-rect.hclust(tree = u_dend_reord, k = k)
-
-# Ward
-grupos_ward <- as.factor(cutree(lista_cl$cl_ward, k = k))
-set.seed(999);sample(grupos_ward, 10) #¿A qué grupo pertenecen 10 hexágonos seleccionados al azar?
-table(grupos_ward) #¿Cuántos hexágonos hay en cada grupo?
-plot(w_dend_reord, hang = -1)
-rect.hclust(tree = w_dend_reord, k = k)
-
-# Guardaré estos vectores en archivos para reutilizarlos en *scripts* posteriores: 
-saveRDS(grupos_upgma, 'grupos_upgma_acanthaceae.RDS')
-saveRDS(grupos_ward, 'grupos_ward_acanthaceae.RDS')
-```
-
-### Grupos (clústers), variables ambientales y mapas
-
-> No olvides ejecutar la parte de código común y reutilizable situada arriba. Esta subsección necesita de objetos creados en líneas de código previas.
-
-Apliquemos el análisis de agrupamiento a la matriz ambiental. La clave en este punto es que, si la matriz ambiental presenta patrones parecidos a los de la matriz de comunidad, significa que el agrupamiento utilizado hace sentido entre ambos conjuntos de datos (comunidad y hábitat) de forma consistente. Si ambos conjuntos de datos son consistentes, significa que existe algún grado de asociación.
-
-Cargar paquetes necesarios para esta subsección.
-
-```{r}
-library(RColorBrewer)
-library(leaflet)
-library(leaflet.extras)
-```
-
-Agrupar los hexágonos de la matriz ambiental.
-
-```{r}
-(m_amb_upgma <- env %>%
-   rownames_to_column('hex_id') %>% 
-   mutate(grupos_upgma) %>%
-   pivot_longer(-c(grupos_upgma, hex_id), names_to = "variable", values_to = "valor") %>% 
-   inner_join(za %>% select(hex_id)))
-
-(m_amb_ward <- env %>%
-    rownames_to_column('hex_id') %>% 
-    mutate(grupos_ward) %>%
-    pivot_longer(-c(grupos_ward, hex_id), names_to = "variable", values_to = "valor") %>% 
-    inner_join(za %>% select(hex_id)))
-```
-
-Evaluar efectos entre los grupos ("diferencias significativas") de los agrupamientos UPGMA y Ward. Al tratarse de 6 grupos, se utilizan las pruebas estadísticas ANOVA (evalúa homongeneidad de medias) y Kruskal-Wallis (evalúa homogeneidad de medianas). Las tablas están ordenadas en orden ascendente por la columna `p_valor_a`, que son los p-valores de la prueba ANOVA.
-
-```{r}
-# UPGMA
-m_amb_upgma_ak <- m_amb_upgma %>%
-  group_by(variable) %>%
-  summarise(
-    p_valor_a = tryCatch(oneway.test(valor ~ grupos_upgma)$p.value, error = function(e) NA),
-    p_valor_k = tryCatch(kruskal.test(valor ~ grupos_upgma)$p.value, error = function(e) NA)
-    ) %>%
-  arrange(p_valor_a)
-m_amb_upgma_ak %>%
-  kable(booktabs=T) %>%
-  kable_styling(latex_options = c("HOLD_position", "scale_down")) %>%
-  gsub(' NA ', '', .)
-
-# Ward
-m_amb_ward_ak <- m_amb_ward %>%
-  group_by(variable) %>%
-  summarise(
-    p_valor_a = tryCatch(oneway.test(valor ~ grupos_ward)$p.value, error = function(e) NA),
-    p_valor_k = tryCatch(kruskal.test(valor ~ grupos_ward)$p.value, error = function(e) NA)
-    ) %>%
-  arrange(p_valor_a)
-m_amb_ward_ak %>%
-  kable(booktabs=T) %>%
-  kable_styling(latex_options = c("HOLD_position", "scale_down")) %>%
-  gsub(' NA ', '', .)
-```
-
-EXPLORA TUS RESULTADOS (usa como referencia [practica-99-tu-manuscrito-3-resultados.md](../practica-99-tu-manuscrito-3-resultados.md) y el vídeo correspondiente a tu caso)
-
-
-```{r, fig.width=9, fig.height=12, dpi=300}
-remesas <- list(primera = colnames(env)[1:68], segunda = colnames(env)[69:136])
-map(1:2,
-    function(x) {
-      m_amb_upgma %>% 
-        filter(variable %in% remesas[[x]]) %>% 
-        group_by(variable) %>% 
-        ggplot() + aes(x = grupos_upgma, y = valor, fill = grupos_upgma) + 
-        geom_boxplot(lwd = 0.2) + 
-        scale_fill_brewer(palette = 'Set1') +
-        theme_bw(base_size=6) +
-        theme(legend.position="none") +
-        facet_wrap(~ variable, scales = 'free_y', ncol = 8)
-    })
-map(1:2,
-    function(x) {
-      m_amb_ward %>% 
-        filter(variable %in% remesas[[x]]) %>% 
-        group_by(variable) %>% 
-        ggplot() + aes(x = grupos_ward, y = valor, fill = grupos_ward) + 
-        geom_boxplot(lwd = 0.2) + 
-        scale_fill_brewer(palette = 'Set1') +
-        theme_bw(base_size=6) +
-        theme(legend.position="none") +
-        facet_wrap(~ variable, scales = 'free_y', ncol = 8)
-    })
-```
-
-En los diagramas de caja, notarás que, las variables que aparecen en las primeras filas de las tablas anteriores, son las mismas que presentan mayor variabilidad de las cajas. Sigo con el ejemplo de las variables `GFC-LOSS year 2020`, `ESA Open Water` y `G90-GEOM footslope`, y nota que las anchuras de sus cajas, sus bigotes y la posición de la mediana (línea interior de la caja), fluctúa mucho entre grupos.
-
-El objetivo de adjuntarle, a la matriz ambiental, el vector de agrupamiento generado a partir de datos de comunidad, consiste en caracterizar ambientalmente los hábitats de los subgrupos diferenciados según su composición. Observa los resultados de las pruebas estadísticas, de los diagramas de caja, EXPLORA TUS RESULTADOS (usa como referencia [practica-99-tu-manuscrito-3-resultados.md](../practica-99-tu-manuscrito-3-resultados.md) y el vídeo correspondiente a tu caso):
-
-1. Hábitat del grupo 1.
-
-2. Hábitat del grupo 2. 
-
-3. Hábitats del grupo 3.
-
-A continuación, muestro mapas de los dos agrupamientos, tanto UPGMA como Ward, y comparo con algunas de las variables que presentaron efecto. Usando la función `mapa_leaflet` este bloque genera un mapa interactivo que colorea los hexágonos en función del grupo al que fueron asignados de acuerdo al análisis de agrupamiento realizado a la matriz de comunidad por el método UPGMA. Te recomiendo que uses la función `mapa_leaflet`, especificando tu matriz ambiental, la variable que quieras representar y un título, para generar mapas de tus propias variables seleccionadas.
-
-```{r}
-m_amb_clusters_sf <- env %>%
-  rownames_to_column('hex_id') %>% 
-  mutate(
-    grupos_upgma = as.character(grupos_upgma),
-    grupos_ward = as.character(grupos_ward)) %>%
-  inner_join(za %>% select(hex_id)) %>%
-  st_as_sf()
-mapa_upgma <- mapa_leaflet(
-  mapa = m_amb_clusters_sf,
-  variable = 'grupos_upgma',
-  titulo_leyenda = paste0('UPGMA, k=', k))
-mapa_upgma
-```
-
-Ídem anterior, pero según Ward.
-
-```{r}
-mapa_ward <- mapa_leaflet(
-  mapa = m_amb_clusters_sf,
-  variable = 'grupos_ward',
-  titulo_leyenda = paste0('Ward, k=', k))
-mapa_ward
-```
-
-El siguiente bloque de código representa, cartográficamente, algunas variables que mostraron inhomogeneidad en las pruebas estadísticas, es decir, variables en las que parecía haber diferencias significativas entre hexágonos de distintos grupos. Las variables que mostraron diferencias significativas podrían ayudar a explicar la varianza de la composición de la comunidad.
-
-```{r}
-m_amb_upgma_ak$variable[1:20]
-mapa_upgma_v1 <- mapa_leaflet(
-  mapa = m_amb_clusters_sf,
-  variable = m_amb_upgma_ak$variable[1],
-  titulo_leyenda = gsub('(.{1,25})(\\s|$)', '\\1<br>', m_amb_upgma_ak$variable[1]))
-mapa_upgma_v1
-mapa_upgma_v2 <- mapa_leaflet(
-  mapa = m_amb_clusters_sf,
-  variable = m_amb_upgma_ak$variable[2],
-  titulo_leyenda = gsub('(.{1,25})(\\s|$)', '\\1<br>', m_amb_upgma_ak$variable[2]))
-mapa_upgma_v2
-mapa_upgma_v6 <- mapa_leaflet(
-  mapa = m_amb_clusters_sf,
-  variable = m_amb_upgma_ak$variable[6],
-  titulo_leyenda = m_amb_upgma_ak$variable[6])
-mapa_upgma_v6
-mapa_upgma_v8 <- mapa_leaflet(
-  mapa = m_amb_clusters_sf,
-  variable = m_amb_upgma_ak$variable[8],
-  titulo_leyenda = m_amb_upgma_ak$variable[8])
-mapa_upgma_v8
-mapa_upgma_v16 <- mapa_leaflet(
-  mapa = m_amb_clusters_sf,
-  variable = m_amb_upgma_ak$variable[16],
-  titulo_leyenda = m_amb_upgma_ak$variable[16])
-mapa_upgma_v16
-```
-
-### Especies con preferencia/fidelidad con grupos (clústers)
-
-Paquete `indicspecies`.
-
-```{r}
-library(indicspecies)
-```
-
-Análisis de preferencia/fidelidad de especies con grupos (clusters), mediante el coeficiente de correlación biserial puntual.
-
-- UPGMA
-
-```{r}
-phi_upgma <- multipatt(
-  mc,
-  grupos_upgma,
-  func = "r.g",
-  max.order = 1,
-  control = how(nperm = 999))
-summary(phi_upgma)
-data.frame(abreviado = rownames(phi_upgma$sign)[which(phi_upgma$sign$p.value < 0.05)]) %>%
-  inner_join(df_equivalencias) %>%
-  arrange(abreviado) %>% 
-  kable(booktabs=T) %>%
-  kable_styling(latex_options = c("HOLD_position", "scale_down"))
-```
-
-- Ward
-
-```{r} 
-phi_ward <- multipatt(
-  mc,
-  grupos_ward,
-  func = "r.g",
-  max.order = 2,
-  control = how(nperm = 999))
-summary(phi_ward)
-data.frame(abreviado = rownames(phi_ward$sign)[which(phi_ward$sign$p.value < 0.05)]) %>%
-  inner_join(df_equivalencias) %>%
-  arrange(abreviado) %>% 
-  kable(booktabs=T) %>%
-  kable_styling(latex_options = c("HOLD_position", "scale_down"))
-```
-
-EXPLORA TUS RESULTADOS (usa como referencia [practica-99-tu-manuscrito-3-resultados.md](../practica-99-tu-manuscrito-3-resultados.md) y el vídeo correspondiente a tu caso)
 
 
 

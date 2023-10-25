@@ -50,8 +50,8 @@ estudiantes <- read_csv("fuentes/practica-04/lista-de-estudiantes.csv")
 generar_matrices <- function(aleatorizacion) {
   # Crear matriz de comunidad binaria aleatoria
   set.seed(aleatorizacion)
-  comunidad <- matrix(sample(c(0,1), 150, replace=TRUE), nrow=15)
-  colnames(comunidad) <- paste0("sp", sprintf("%02d", 1:10))
+  comunidad <- matrix(sample(c(0,1), 180, replace=TRUE), nrow=15)
+  colnames(comunidad) <- paste0("sp", sprintf("%02d", 1:12))
   
   # Crear matriz ambiental aleatoria
   set.seed(aleatorizacion)
@@ -60,20 +60,28 @@ generar_matrices <- function(aleatorizacion) {
   
   # Elegir aleatoriamente especies y variables para asociación
   set.seed(aleatorizacion)
-  especies_assoc1 <- sample(1:10, 4, replace=FALSE)
-  especies_assoc2 <- setdiff(1:10, especies_assoc1)[1:4]
+  especies_assoc1 <- sample(1:12, 4, replace=FALSE)
+  especies_assoc2 <- setdiff(1:12, especies_assoc1)[1:4]
+  especies_assoc3 <- setdiff(1:12, c(especies_assoc1, especies_assoc2))
   
   set.seed(aleatorizacion)
-  vars_assoc1 <- sample(1:4, 2, replace=FALSE)
-  vars_assoc2 <- setdiff(1:4, vars_assoc1)
+  vars_assoc1 <- sample(1:4, 1)
+  vars_assoc2 <- setdiff(1:4, vars_assoc1)[1]
+  vars_assoc3 <- setdiff(1:4, c(vars_assoc1, vars_assoc2))[1]
   
   # Reordenar
-  orden_vars_assoc1 <- order(ambiental[,vars_assoc1[1]] + ambiental[,vars_assoc1[2]])
+  orden_vars_assoc1 <- order(
+    ambiental[,vars_assoc1])
   comunidad[orden_vars_assoc1[1:4], especies_assoc1] <- 1
   
   # Reordenar
-  orden_vars_assoc2 <- order(ambiental[,vars_assoc2[1]] + ambiental[,vars_assoc2[2]])
+  orden_vars_assoc2 <- order(ambiental[,vars_assoc2])
   comunidad[orden_vars_assoc2[1:4], especies_assoc2] <- 1
+
+  # Reordenar
+  orden_vars_assoc3 <- order(ambiental[,vars_assoc3])
+  comunidad[orden_vars_assoc3[1:4], especies_assoc3] <- 1
+
   
   return(list(comunidad = comunidad, ambiental = ambiental))
 }

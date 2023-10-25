@@ -9,3 +9,7 @@
 ## [Practica 4. Describe resultados de ecología numérica](practica-04.md)
 
 <!-- ## [Practica 5. Introducción a QGIS para Biogeografía, parte 2](practica-05.md) -->
+
+<!-- ## [Practica 6. Valor de p](practica-06.md) -->
+
+<!-- ## [Practica 7. Agrupamiento UPGMA](practica-07.md) -->
