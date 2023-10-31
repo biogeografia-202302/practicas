@@ -15,6 +15,7 @@ always_allow_html: true
 ```{r, echo=F, include=F}
 knitr::opts_chunk$set(
   echo = TRUE,
+  eval=FALSE, #!!!!!!!!!!!!!!!!!!!!!!!!!!CON CUIDADO
   warning = FALSE,
   message = FALSE,
   out.width = '80%',
@@ -63,7 +64,7 @@ estudiantes <- read_csv("fuentes/practica-04/lista-de-estudiantes.csv")
 
 
 
-```{r FIRST, echo=F, eval=T}
+```{r FIRST, echo=F}
 # Función para generar matrices
 generar_matrices <- function(aleatorizacion) {
   # Crear matriz de comunidad binaria aleatoria
@@ -212,6 +213,14 @@ Te transcribo a continuación algunas preguntas que te podrían servir para reda
 
 ## Criterios de evaluación y escala de valoración
 
+| Criterio de Evaluación                                           | Nivel 1 (En desarrollo)                                          | Nivel 2 (Aceptable)                                               | Nivel 3 (Bueno)                                                  | Nivel 4 (Excelente)                                              |
+|------------------------------------------------------------------|-----------------------------------------------------------------|------------------------------------------------------------------|------------------------------------------------------------------|------------------------------------------------------------------|
+| **Formato y Entrega del Documento**                               | Falta archivo nativo o no es editable.                          | Entrega archivo nativo, pero no sigue indicaciones precisas.    | Entrega archivo nativo siguiendo casi todas las indicaciones.   | Entrega archivo nativo siguiendo todas las indicaciones.        |
+| **Uso del Tiempo Pasado en la Redacción**                         | No utiliza tiempo pasado o lo usa inadecuadamente.              | Utiliza tiempo pasado, pero con inconsistencias notables.       | Utiliza tiempo pasado con pocas inconsistencias.                | Utiliza tiempo pasado de manera consistente y adecuada.         |
+| **Redacción de la Sección "Metodología"**                         | Falta la sección o es muy incompleta.                           | Menciona técnicas, pero falta citar o profundizar en detalles.  | Menciona y cita técnicas, pero podría mejorar en claridad.      | Menciona y cita técnicas de manera clara y concisa.             |
+| **Redacción de la Sección "Resultados"**                          | Falta la sección o es muy incompleta.                           | Describe resultados, pero falta conexión con la metodología.   | Describe resultados de forma clara, con mínimas mejoras.        | Describe resultados de forma clara y conecta con la metodología.|
+| **Coherencia entre Metodología y Resultados**                     | Las secciones no están conectadas o falta coherencia.          | Hay intento de conexión, pero con lagunas notables.             | Las secciones están conectadas, con pequeñas mejoras posibles.  | Las secciones están perfectamente conectadas y coherentes.      |
+| **Respuestas a las Preguntas de Guía**                            | No responde o responde de manera inadecuada a las preguntas.   | Responde a algunas preguntas, pero falta profundidad.           | Responde a la mayoría de las preguntas de forma adecuada.       | Responde a todas las preguntas de forma clara y completa.       |
 
 
 ## Referencias
