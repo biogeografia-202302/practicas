@@ -12,7 +12,7 @@ always_allow_html: true
 
 <!-- README.md se genera a partir de README.Rmd. Por favor, edita ese archivo. -->
 
-```{r, echo=F, include=F}
+```{r, echo=F, include=F, eval=T}
 knitr::opts_chunk$set(
   echo = TRUE,
   eval=FALSE, #!!!!!!!!!!!!!!!!!!!!!!!!!!CON CUIDADO
@@ -53,7 +53,7 @@ Elaboré informes personalizados usando datos ficticios y aplicando técnicas de
 
 Aquí tienes una lista de informes personalizados. Localiza el tuyo y sigue las instrucciones de la siguiente sección.
 
-```{r, echo=F}
+```{r, echo=F, eval=T}
 # Cargar las bibliotecas necesarias
 library(tidyverse)
 library(vegan)
@@ -129,11 +129,15 @@ for (res in resultados) {
 
 
 
-```{r, echo=F, include=F}
+```{r, echo=F, include=F, eval=T}
 # Generar informes
 nombres_ajustados <- iconv(
       gsub(" ", "-", estudiantes$`Nombres y apellidos`),
       from = "UTF-8", to = "ASCII//TRANSLIT")
+```
+
+
+```{r, echo=F, include=F}
 # for (i in nombres_ajustados[1]) {
 for (i in nombres_ajustados) {
   nombre_salida <- paste0(fuentes_practica, "informe-", i, ".html")
@@ -151,7 +155,7 @@ for (i in nombres_ajustados) {
 
 
 
-```{r, echo=F}
+```{r, echo=F, eval=T}
 data.frame(Estudiante = nombres_ajustados,
            `Ruta de informe` = paste0("[https://biogeografia-202302.github.io/practicas/", fuentes_practica, "informe-", nombres_ajustados, ".html](https://biogeografia-202302.github.io/practicas/", fuentes_practica, "informe-", nombres_ajustados, ".html)"), check.names = F) %>% 
   kable(format = 'markdown')

@@ -37,6 +37,32 @@ manuscrito será “un cachú”. Vamo’ al lío.
 Aquí tienes una lista de informes personalizados. Localiza el tuyo y
 sigue las instrucciones de la siguiente sección.
 
+| Estudiante                        | Ruta de informe                                                                                                      |
+|:----------------------------------|:---------------------------------------------------------------------------------------------------------------------|
+| Adrian-Rafael-Diplan-Montas       | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Adrian-Rafael-Diplan-Montas.html>       |
+| Alan-Manuel-Contreras-Sanchez     | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Alan-Manuel-Contreras-Sanchez.html>     |
+| Ana-Garcia                        | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Ana-Garcia.html>                        |
+| Angel-Rolando-Gomez-Gonzalez      | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Angel-Rolando-Gomez-Gonzalez.html>      |
+| Arisleydi-Mejia-De-La-Cruz        | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Arisleydi-Mejia-De-La-Cruz.html>        |
+| Bryan-Josue-Funez-Ramos           | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Bryan-Josue-Funez-Ramos.html>           |
+| Carmen-Munoz-Patricio             | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Carmen-Munoz-Patricio.html>             |
+| Claribel-Reyes-Ramirez            | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Claribel-Reyes-Ramirez.html>            |
+| Eddy-Bienvenido-Ulloa-Almonte     | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Eddy-Bienvenido-Ulloa-Almonte.html>     |
+| Emely-Fabianny-Rodriguez-Martinez | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Emely-Fabianny-Rodriguez-Martinez.html> |
+| Emely-Herrera-Arias               | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Emely-Herrera-Arias.html>               |
+| Floranny-Lorenzo-Dominguez        | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Floranny-Lorenzo-Dominguez.html>        |
+| Franchesca-Feliz-Linares          | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Franchesca-Feliz-Linares.html>          |
+| Joel-Benjamin-Perez-Garcia        | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Joel-Benjamin-Perez-Garcia.html>        |
+| Jose-Ramon-Martinez-Batlle        | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Jose-Ramon-Martinez-Batlle.html>        |
+| Manuel-Enrique-Urena-Reyes        | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Manuel-Enrique-Urena-Reyes.html>        |
+| Miguel-Landestoy-Tejeda           | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Miguel-Landestoy-Tejeda.html>           |
+| Ramona-Geraldo-Munoz              | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Ramona-Geraldo-Munoz.html>              |
+| Saderis-Carmona-Marte             | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Saderis-Carmona-Marte.html>             |
+| Scarlin-Adames-Lantigua           | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Scarlin-Adames-Lantigua.html>           |
+| Unifer-Tavarez-Ferreras           | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Unifer-Tavarez-Ferreras.html>           |
+| Valeria-Novas-Perez               | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Valeria-Novas-Perez.html>               |
+| Yenny-Mabel-Santana               | <https://biogeografia-202302.github.io/practicas/fuentes/practica-04/informe-Yenny-Mabel-Santana.html>               |
+
 ## Analiza tu informe personalizado, redacta “Metodología” y “Resultados”
 
 Inspecciona tu informe personalizado concentrándote primero en el
