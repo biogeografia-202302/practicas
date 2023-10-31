@@ -1,5 +1,5 @@
 ---
-title: Practica 2. Describe resultados de ecología numérica
+title: Practica 4. Redacta "Metodología" y "Resultados" de ecología numérica
 author: <b>José-Ramón Martínez-Batlle</b> (jmartinez19@uasd.edu.do) <br> Facultad de Ciencias, Universidad Autónoma de Santo Domingo (UASD) <br> Santo Domingo, República Dominicana
 bibliography: references.bib
 csl: apa-es.csl
@@ -26,26 +26,44 @@ options(knitr.duplicate.label = "allow")
 library(tidyverse)
 library(kableExtra)
 options(knitr.kable.NA = '')
-estilo_kable <- function(df, titulo = '', cubre_anchura = T) {
-  df %>% kable(format = 'html', escape = F, booktabs = T,
-               digits = 2, caption = titulo) %>%
+estilo_kable <- function(df, formato = 'markdown', titulo = '',
+                         cubre_anchura = F, nombres_filas = F, alinear = NULL) {
+  df %>% kable(format = formato, escape = F, booktabs = T, align = alinear,
+               digits = 2, caption = titulo, row.names = nombres_filas) %>%
     kable_styling(bootstrap_options = c("hover", "condensed"),
-                  full_width = cubre_anchura, position = "center")
+                  latex_options = "HOLD_position",
+                  full_width = cubre_anchura, position = "center") %>% 
+    gsub(' NA ', '', .)
 }
+fuentes_practica <- 'fuentes/practica-04/'
 ```
 
-> Fecha de entrega: 7 de noviembre, 23:59 horas.
+> Fecha de entrega: 14 de noviembre, 23:59 horas.
 
 > Entrega tu práctica en archivo(s) en formato nativo (editable) del programa que hayas usado y, opcionalmente, en formato PDF. Por ejemplo, si trabajaste tu documento en Microsoft Word, envía el correspondiente archivo .docx o .doc. Si lo hiciste en LibreOffice Writer, envía el archivo .odt o el que corresponda, pero que sea nativo y editable. Si trabajaste en LaTeX, envía el archivo .tex y los asociados a éste.
 
-```{r}
+Elaboré informes personalizados usando datos ficticios y aplicando técnicas de ecología numérica. Digamos que "te liberé" de la parte de manipular datos y código informático. En esta práctica te pido que te concentres en redactar cómo se hizo (metodología) y qué se obtuvo (resultados) en tu informe personalizado. Si logras comprender esta práctica, el análisis posterior de los datos de hormigas para tu manuscrito será "un cachú". Vamo' al lío.
+
+## Entregable
+
+- Documento, **redactado en tiempo pasado** que contenga las subsecciones "Metodología" y "Resultados" usando como referencia un informe personalizado basado en datos ficticios. El tiempo pasado es el habitual en la metodología y los resultados. También recuerda que debes ser consistente con la voz elegida (pasiva, activa).
+
+## Localiza tu informe personalizado
+
+Aquí tienes una lista de informes personalizados. Localiza el tuyo y sigue las instrucciones de la siguiente sección.
+
+```{r, echo=F}
 # Cargar las bibliotecas necesarias
 library(tidyverse)
 library(vegan)
 
 # Leer la lista de estudiantes
 estudiantes <- read_csv("fuentes/practica-04/lista-de-estudiantes.csv")
+```
 
+
+
+```{r FIRST, echo=F, eval=T}
 # Función para generar matrices
 generar_matrices <- function(aleatorizacion) {
   # Crear matriz de comunidad binaria aleatoria
@@ -85,7 +103,11 @@ generar_matrices <- function(aleatorizacion) {
   
   return(list(comunidad = comunidad, ambiental = ambiental))
 }
+```
 
+
+
+```{r, echo=F}
 # Generar matrices para cada estudiante y guardar en una lista
 resultados <- lapply(1:nrow(estudiantes), function(x) {
   matrices <- generar_matrices(aleatorizacion = x)
@@ -105,42 +127,87 @@ for (res in resultados) {
 ```
 
 
-##
+
+```{r, echo=F, include=F}
+# Generar informes
+nombres_ajustados <- iconv(
+      gsub(" ", "-", estudiantes$`Nombres y apellidos`),
+      from = "UTF-8", to = "ASCII//TRANSLIT")
+# for (i in nombres_ajustados[1]) {
+for (i in nombres_ajustados) {
+  nombre_salida <- paste0(fuentes_practica, "informe-", i, ".html")
+  rmarkdown::render(
+    input = "practica-04-plantilla.Rmd",
+    output_file = nombre_salida,
+    params = list(estudiante = i),
+    envir = new.env()
+  )
+  while (length(dev.list()) > 0) {
+    grDevices::dev.off()
+  }
+}
+```
 
 
 
-## Describe resultados de análisis de agrupamiento
-
-Estas preguntas te podrían guiar:
-
-- Las unidades muestrales, ¿se organizan en grupos diferenciados según la composición de las especies de hormigas?
-
-- Si existe algún patrón, ¿es consistente con alguna variable de la matriz ambiental?
-
-- ¿Hay especies indicadoras o con preferencia por determinadas variables?
-
-## Describe resultados de técnicas de ordenación
+```{r, echo=F}
+data.frame(Estudiante = nombres_ajustados,
+           `Ruta de informe` = paste0("[https://biogeografia-202302.github.io/practicas/", fuentes_practica, "informe-", nombres_ajustados, ".html](https://biogeografia-202302.github.io/practicas/", fuentes_practica, "informe-", nombres_ajustados, ".html)"), check.names = F) %>% 
+  kable(format = 'markdown')
+```
 
 
+## Analiza tu informe personalizado, redacta "Metodología" y "Resultados"
 
-Estas preguntas te podrían guiar:
+Inspecciona tu informe personalizado concentrándote primero en el documento propiamente, SIN OBSERVAR CÓDIGO INFORMÁTICO, al menos por ahora. Puedes pedir ayuda al ChatGPT para que te describa lo que se "obtuviste" en cada caso, pero dado que muchos resultados son sólo gráficos, no podrás pedirle ayuda en todo. Para estos casos, apóyate del vídeo asociado.
 
-- En un espacio bidimensional, ¿existen tendencias apreciables de ordenación de las especies?
+Cuando hayas obtenido una visión general, entonces profundiza ligeramente en el código, especialmente en las líneas `library()`, que son las que cargan paquetes. Luego, observa las funciones empleadas (cualquier nombre acompañado de paréntesis es una función en `R`); en el vídeo asociado menciono las funciones clave en cada caso. Esto te ayudará a redactar la parte de "Metodología".
 
-- Si existen tendencias de ordenación, ¿se asocian éstas con determinadas variables?
+Verás que tu informe personalizado tiene cuatro secciones: 
 
-## Describe resultados de análisis de diversidad + análisis de agrupamiento
+- Análisis exploratorio de datos (AED). Esta no cuenta como técnica de ecología numérica, sólo que se asume que debe realizarse de forma preceptiva en cualquier estudio.
 
-Estas preguntas te podrían guiar:
+- Análisis de agrupamiento.
 
-- Según los análisis de estimación de riqueza, ¿está suficientemente representada la comunidad? Consideremos como buena representación un 80% del total esperado.
+- Técnicas de ordenación.
 
-- ¿Es la riqueza esperada mayor o menor según en qué hábitats (caracterizados según variables) nos encontremos?
+- Análisis de diversidad + análisis de agrupamiento abreviado.
 
-- ¿Existe asociación de la diversidad alpha con las variables, es decir, es mayor o menor la diversidad alpha según en qué grupo de muestras nos encontremos?
+De cada técnica de ecología numérica que apliqué para ti (agrupamiento, ordenación, diversidad+agrupamiento; recuerda que el AED no cuenta como técnica de ecología numérica), redacta en un párrafo la metodología empleada en tiempo pasado. Debes usar citas y explicar cómo obtuviste tus resultados (sin adelantarlos) de la manera más breve posible. Cuando redactes sobre las técnicas empleadas, no entres en detalles que el autor o autora de la referida técnica ya haya descrito. Normalmente, en la metodología mencionas, de manera inequívoca, el nombre de el o los algoritmos usaste y para qué lo usaste, qué parámetros del algoritmo definiste, qué criterios de selección empleaste para elegir las técnicas y por qué. Es necesario mencionar el software empleado (en este caso es `R`, que tiene una forma estándar de citarse). También deberás mencionar algunos paquetes usados (quizá no todos), y citarlos (busca cómo citar paquetes de `R`). Cuando hayas redactado la metodología de cada técnica empleada, tendrás seguramente tres párrafos, uno por cada técnica.
 
-- ¿Existe contribución local o por alguna especie a la diversidad beta?
+Asimismo, de cada técnica de ecología numérica (agrupamiento, ordenación, diversidad+agrupamiento), describe en tiempo pasado los resultados obtenidos tras examinar los productos que generé para ti. No olvides los resultados generales, como riqueza total, sitio más rico, sitio más pobre, especie más común, etc., que son típicamente elaborados en la exploración de los datos. Abajo te transcribí algunas preguntas que puedes usar para guiarte en la redacción de resultados. Los resultados de cada técnica de ecología numérica no deberían exceder dos párrafos (si lo haces en un párrafo es perfecto), por lo que, juntándolos todos, tendrías entre **tres y seis párrafos de resultados**, como mucho.
 
+Al finalizar, construye tu documento entregable conteniendo dos secciones:
+
+- Metodología. Funde todas las metodologías que redactaste de forma parcial.
+
+- Resultados. Funde los resultados que redactaste de forma parcial.
+
+Te transcribo a continuación algunas preguntas que te podrían servir para redactar la sección de resultados de cada técnica.
+
+- Preguntas que te podrían guiar para extraer resultados del análisis de agrupamiento:
+
+  - Las unidades muestrales, ¿se organizan en grupos diferenciados según la composición de especies?
+
+  - Si existe algún patrón, ¿es consistente con alguna variable de la matriz ambiental?
+
+  - ¿Hay especies indicadoras o con preferencia por determinadas variables?
+
+- Preguntas que te podrían guiar para extraer resultados de las técnicas de ordenación:
+
+  - En un espacio bidimensional, ¿existen tendencias apreciables de ordenación de las especies?
+
+  - Si existen tendencias de ordenación, ¿se asocian éstas con determinadas variables?
+
+- Preguntas que te podrían guiar para extraer resultados del análisis de diversidad + análisis de agrupamiento abreviado:
+
+  - Según los análisis de estimación de riqueza, ¿está suficientemente representada la comunidad? Consideremos como buena representación un 80% del total esperado.
+
+  - ¿Es la riqueza esperada mayor o menor según en qué hábitats (caracterizados según variables) nos encontremos?
+
+  - ¿Existe asociación de la diversidad alpha con las variables, es decir, es mayor o menor la diversidad alpha según en qué grupo de muestras nos encontremos?
+
+  - ¿Existe contribución local o por alguna especie a la diversidad beta?
 
 
 ## Criterios de evaluación y escala de valoración
