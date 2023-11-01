@@ -16,6 +16,9 @@ Santo Domingo, República Dominicana
 > nativo y editable. Si trabajaste en LaTeX, envía el archivo .tex y los
 > asociados a éste.
 
+> [Vídeos asociados, como apoyo para la realización de esta
+> práctica](https://www.youtube.com/watch?v=2E5G3eC3E_Y&list=PLDcT2n8UzsCQKAO4T8N0xCxK89RpQ7jRz)
+
 Elaboré informes personalizados usando datos ficticios y aplicando
 técnicas de ecología numérica. Digamos que “te liberé” de la parte de
 manipular datos y código informático. En esta práctica te pido que te
@@ -69,15 +72,18 @@ Inspecciona tu informe personalizado concentrándote primero en el
 documento propiamente, SIN OBSERVAR CÓDIGO INFORMÁTICO, al menos por
 ahora. Puedes pedir ayuda al ChatGPT para que te describa lo que se
 “obtuviste” en cada caso, pero dado que muchos resultados son sólo
-gráficos, no podrás pedirle ayuda en todo. Para estos casos, apóyate del
-vídeo asociado.
+gráficos, no podrás pedirle ayuda en todo. Para estos casos, apóyate de
+los [vídeos
+asociados](https://www.youtube.com/watch?v=2E5G3eC3E_Y&list=PLDcT2n8UzsCQKAO4T8N0xCxK89RpQ7jRz).
 
 Cuando hayas obtenido una visión general, entonces profundiza
 ligeramente en el código, especialmente en las líneas `library()`, que
 son las que cargan paquetes. Luego, observa las funciones empleadas
-(cualquier nombre acompañado de paréntesis es una función en `R`); en el
-vídeo asociado menciono las funciones clave en cada caso. Esto te
-ayudará a redactar la parte de “Metodología”.
+(cualquier nombre acompañado de paréntesis es una función en `R`); en
+los [vídeos
+asociados](https://www.youtube.com/watch?v=2E5G3eC3E_Y&list=PLDcT2n8UzsCQKAO4T8N0xCxK89RpQ7jRz)
+menciono las funciones clave en cada caso. Esto te ayudará a redactar la
+parte de “Metodología”.
 
 Verás que tu informe personalizado tiene cuatro secciones:
 
