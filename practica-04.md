@@ -23,21 +23,25 @@ Elaboré informes personalizados usando datos ficticios y aplicando
 técnicas de ecología numérica. Digamos que “te liberé” de la parte de
 manipular datos y código informático. En esta práctica te pido que te
 concentres en redactar cómo se hizo (metodología) y qué se obtuvo
-(resultados) en tu informe personalizado. Si logras comprender esta
+(resultados) en tu informe personalizado, abarcando **todas las técnicas
+de ecología numérica aplicadas en el mismo**. Si logras comprender esta
 práctica, el análisis posterior de los datos de hormigas para tu
 manuscrito será “un cachú”. Vamo’ al lío.
 
 ## Entregable
 
 - Documento, **redactado en tiempo pasado** que contenga las
-  subsecciones “Metodología” y “Resultados” usando como referencia un
-  informe personalizado basado en datos ficticios. El tiempo pasado es
-  el habitual en la metodología y los resultados. También recuerda que
-  debes ser consistente con la voz elegida (pasiva, activa).
+  subsecciones “Metodología” y “Resultados” de **todas las técnicas de
+  ecología numérica empleadas en tu informe personalizado**. Aunque el
+  informe se basa en datos ficticios, los que obtendrás de tus colectas
+  de hormigas en el campus de la UASD serán muy parecidos a estos. El
+  tiempo pasado es el habitual en la redacción de la metodología y los
+  resultados. También recuerda que debes ser consistente con la voz
+  elegida (pasiva, activa).
 
 ## Localiza tu informe personalizado
 
-Aquí tienes una lista de informes personalizados. Localiza el tuyo y
+Aquí tienes la lista de informes personalizados. Localiza el tuyo y
 sigue las instrucciones de la siguiente sección.
 
 | Estudiante                        | Ruta de informe                                                                                                      |
@@ -97,21 +101,23 @@ Verás que tu informe personalizado tiene cuatro secciones:
 
 - Análisis de diversidad + análisis de agrupamiento abreviado.
 
-De cada técnica de ecología numérica que apliqué para ti (agrupamiento,
-ordenación, diversidad+agrupamiento; recuerda que el AED no cuenta como
-técnica de ecología numérica), redacta en un párrafo la metodología
-empleada en tiempo pasado. Debes usar citas y explicar cómo obtuviste
-tus resultados (sin adelantarlos) de la manera más breve posible. Cuando
-redactes sobre las técnicas empleadas, no entres en detalles que el
-autor o autora de la referida técnica ya haya descrito. Normalmente, en
-la metodología mencionas, de manera inequívoca, el nombre de el o los
-algoritmos usaste y para qué lo usaste, qué parámetros del algoritmo
-definiste, qué criterios de selección empleaste para elegir las técnicas
-y por qué. Es necesario mencionar el software empleado (en este caso es
-`R`, que tiene una forma estándar de citarse). También deberás mencionar
-algunos paquetes usados (quizá no todos), y citarlos (busca cómo citar
-paquetes de `R`). Cuando hayas redactado la metodología de cada técnica
-empleada, tendrás seguramente tres párrafos, uno por cada técnica.
+Debes abarcar **todas estas técnicas de ecología numérica** en esta
+práctica. De cada técnica que apliqué (agrupamiento, ordenación,
+diversidad+agrupamiento; recuerda que el AED no cuenta como técnica de
+ecología numérica, pero es imprescindible), redacta en un párrafo la
+metodología empleada en tiempo pasado. Debes usar citas y explicar cómo
+obtuviste tus resultados (sin adelantarlos) de la manera más breve
+posible. Cuando redactes sobre las técnicas empleadas, no entres en
+detalles que el autor o autora de la referida técnica ya haya descrito.
+Normalmente, en la metodología mencionas, de manera inequívoca, el
+nombre de el o los algoritmos usaste y para qué lo usaste, qué
+parámetros del algoritmo definiste, qué criterios de selección empleaste
+para elegir las técnicas y por qué. Es necesario mencionar el software
+empleado (en este caso es `R`, que tiene una forma estándar de citarse).
+También deberás mencionar algunos paquetes usados (quizá no todos), y
+citarlos (busca cómo citar paquetes de `R`). Cuando hayas redactado la
+metodología de cada técnica empleada, tendrás seguramente tres párrafos,
+uno por cada técnica.
 
 Asimismo, de cada técnica de ecología numérica (agrupamiento,
 ordenación, diversidad+agrupamiento), describe en tiempo pasado los
